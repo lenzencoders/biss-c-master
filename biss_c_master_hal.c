@@ -1651,30 +1651,35 @@ static void USART2_DeInit_IRS(void){
 	memset((void*)usart2_rx_buffer, 0, RX_BUF_SIZE);
 }
 
-void SetBiSS_SPI_Ch(BiSS_SPI_Ch_t ch_to_set){
-	if(CH1_SPI_MODE == CH1_LENZ_BISS){
-		if(IsBiSSReqBusy() == BISS_REQ_OK){
+void SetBiSS_SPI_Ch(BiSS_SPI_Ch_t ch_to_set)
+{
+	if (CH1_SPI_MODE == CH1_LENZ_BISS)
+	{
+		if (IsBiSSReqBusy() == BISS_REQ_OK)
+		{
 			BiSS_SPI_Ch = ch_to_set;
 		}	
 	}	
 }
 
-void Set_Ch1_Mode(CH1_SPI_mode_t New_Mode){
+void Set_Ch1_Mode(CH1_SPI_mode_t New_Mode)
+{
 	CH1_SPI_MODE = New_Mode;
-	if(IsBiSSReqBusy() == BISS_REQ_OK){
-		if(CH1_SPI_MODE == CH1_LENZ_BISS){
-			LL_DMA_SetMemoryAddress(DMA_BISS1_RX, (uint32_t) &BiSS1_SPI_rx.buf[3]);
-			LL_DMA_SetDataLength(DMA_BISS1_RX, 5);	
-			LL_DMA_SetDataLength(DMA_BISS1_TX, 5);
-		} else if(CH1_SPI_MODE == CH1_LIR_SSI){
-			LL_DMA_SetMemoryAddress(DMA_BISS1_RX, (uint32_t) &BiSS1_SPI_rx.buf[1]);
-			LL_DMA_SetDataLength(DMA_BISS1_RX, 3);	
-			LL_DMA_SetDataLength(DMA_BISS1_TX, 3);
-		}	else if(CH1_SPI_MODE == CH1_LIR_BISS_21B){
-			LL_DMA_SetMemoryAddress(DMA_BISS1_RX, (uint32_t) &BiSS1_SPI_rx.buf[0]);
-			LL_DMA_SetDataLength(DMA_BISS1_RX, 8);	
-			LL_DMA_SetDataLength(DMA_BISS1_TX, 8);
-		}
+	if (CH1_SPI_MODE == CH1_LENZ_BISS)
+	{
+		LL_DMA_SetMemoryAddress(DMA_BISS1_RX, (uint32_t) &BiSS1_SPI_rx.buf[3]);
+		LL_DMA_SetDataLength(DMA_BISS1_RX, 5);	
+		LL_DMA_SetDataLength(DMA_BISS1_TX, 5);
+	} else if (CH1_SPI_MODE == CH1_LIR_SSI)
+	{
+		LL_DMA_SetMemoryAddress(DMA_BISS1_RX, (uint32_t) &BiSS1_SPI_rx.buf[1]);
+		LL_DMA_SetDataLength(DMA_BISS1_RX, 3);	
+		LL_DMA_SetDataLength(DMA_BISS1_TX, 3);
+	}	else if (CH1_SPI_MODE == CH1_LIR_BISS_21B)
+	{
+		LL_DMA_SetMemoryAddress(DMA_BISS1_RX, (uint32_t) &BiSS1_SPI_rx.buf[0]);
+		LL_DMA_SetDataLength(DMA_BISS1_RX, 8);	
+		LL_DMA_SetDataLength(DMA_BISS1_TX, 8);
 	}
 }
 
