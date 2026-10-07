@@ -1655,10 +1655,7 @@ void SetBiSS_SPI_Ch(BiSS_SPI_Ch_t ch_to_set)
 {
 	if (CH1_SPI_MODE == CH1_LENZ_BISS)
 	{
-		if (IsBiSSReqBusy() == BISS_REQ_OK)
-		{
-			BiSS_SPI_Ch = ch_to_set;
-		}	
+	    BiSS_SPI_Ch = ch_to_set;
 	}	
 }
 
