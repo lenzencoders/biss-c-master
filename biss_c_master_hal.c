@@ -39,7 +39,8 @@
 
 // #define PWR1_EN_PIN		GPIOA, LL_GPIO_PIN_8
 
-static volatile enum {
+typedef enum {
+	RS485_ADR0 = 0,
     RS485_ADR1, 
     RS485_ADR2,
     RS485_ADR3,
@@ -47,11 +48,14 @@ static volatile enum {
     RS485_ADR5,
     RS485_ADR6,
     RS485_ADR7
-} RS485_ADR = RS485_ADR2;
+} RS485_ADR_t;
+
+static volatile RS485_ADR_t RS485_ADR = RS485_ADR2;
 
 static volatile uint8_t adr_reset_cou = 0;
 
 typedef enum{
+	RS485_CDM_ADR0_REQ = 0xE0U,
 	RS485_CDM_ADR1_REQ = 0x81U,
 	RS485_CDM_ADR2_REQ = 0x22U,
 	RS485_CDM_ADR3_REQ = 0x43U,
@@ -59,6 +63,7 @@ typedef enum{
 	RS485_CDM_ADR5_REQ = 0x65U,
 	RS485_CDM_ADR6_REQ = 0xC6U,
 	RS485_CDM_ADR7_REQ = 0xA7U,
+	RS485_nCDM_ADR0_REQ = 0xD0U,
 	RS485_nCDM_ADR1_REQ = 0xB1U,
 	RS485_nCDM_ADR2_REQ = 0x12U,
 	RS485_nCDM_ADR3_REQ = 0x73U,
@@ -287,6 +292,9 @@ void BissRequest_CDM(void){
 			LL_DMA_SetDataLength(DMA_BISS2_UART_RX, 4U);
 			LL_DMA_EnableChannel(DMA_BISS2_UART_RX);	 
 			switch(RS485_ADR){
+				case RS485_ADR0:
+					LL_USART_TransmitData8(BISS2_UART, RS485_CDM_ADR0_REQ);
+					break;
                 case RS485_ADR1:
                     LL_USART_TransmitData8(BISS2_UART, RS485_CDM_ADR1_REQ);
                     break;
@@ -332,6 +340,9 @@ void BissRequest_nCDM(void){
 			LL_DMA_SetDataLength(DMA_BISS2_UART_RX, 4U);
 			LL_DMA_EnableChannel(DMA_BISS2_UART_RX);
 			switch(RS485_ADR){
+				case RS485_ADR0:
+					LL_USART_TransmitData8(BISS2_UART, RS485_nCDM_ADR0_REQ);
+					break;
 				case RS485_ADR1:
 					LL_USART_TransmitData8(BISS2_UART, RS485_nCDM_ADR1_REQ);
 					break;
@@ -540,10 +551,10 @@ void BISS_Task_IRQHandler(void) {
 			}
 			else{
 				LED2TurnRed();
-				adr_reset_cou++;
-				if(adr_reset_cou == 255) {
-					RS485_ADR = (RS485_ADR + 1) % 7;
-				}
+//				adr_reset_cou++;
+//				if(adr_reset_cou == 255) {
+//					NextRS485Address();
+//				}
 				if(last_CDM == CDM) {
 					BissRequest_CDM();
 				}
@@ -1723,4 +1734,26 @@ void Change_Current_Sensor_Mode(Current_Sensor_Mode_t New_Mode){
 	} else if(Current_Sensor_Mode == CURRENT_SENSOR_MODE_DISABLE){
 		Current_Sensor_Init();
 	}
+}
+
+uint8_t SetRS485Address(uint8_t address)
+{
+    if (address > RS485_ADR7)
+	{
+        return 0;
+    }
+
+    RS485_ADR = (RS485_ADR_t)address;
+
+    return 1U;
+}
+
+uint8_t GetRS485Address(void)
+{
+    return (uint8_t)RS485_ADR;
+}
+
+void NextRS485Address(void)
+{
+    RS485_ADR = (RS485_ADR_t)((RS485_ADR + 1U) % 8U);
 }

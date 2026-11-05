@@ -137,6 +137,10 @@ void EncoderSecondPowerDisable(void);
 
 int32_t Read_Current_Enc2(void);
 
+uint8_t SetRS485Address(uint8_t address);
+uint8_t GetRS485Address(void);
+void NextRS485Address(void);
+
 #ifdef __cplusplus
 }
 #endif
