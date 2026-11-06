@@ -108,6 +108,8 @@ volatile uint32_t SSI_HALF_FREQ_FLAG = 0;
 uint8_t usart2_tx_buffer[TX_BUF_SIZE] = {0};
 volatile uint8_t usart2_rx_buffer[RX_BUF_SIZE] = {0};
 volatile uint16_t adc1_buffer[ADC_BUF_SIZE] = {0};
+volatile uint32_t BISS_TaskTick = 0;
+
 SPI_rx_t BiSS1_SPI_rx;
 SPI_rx_t BiSS2_SPI_rx;
 USART_rx_t USART_rx;
@@ -379,6 +381,7 @@ void BissRequest_nCDM(void){
 
 void BISS_Task_IRQHandler(void) {
 	LL_TIM_ClearFlag_UPDATE(BISS_Task_TIM);
+	BISS_TaskTick++;
 	switch(Current_Mode){
 		case BISS_MODE_SPI_SPI:
 			switch(CH1_SPI_MODE){

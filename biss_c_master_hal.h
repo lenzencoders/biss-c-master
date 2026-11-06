@@ -141,6 +141,8 @@ uint8_t SetRS485Address(uint8_t address);
 uint8_t GetRS485Address(void);
 void NextRS485Address(void);
 
+extern volatile uint32_t BISS_TaskTick;
+
 #ifdef __cplusplus
 }
 #endif
